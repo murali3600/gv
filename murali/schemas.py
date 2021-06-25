@@ -43,12 +43,13 @@ class applyBase(BaseModel):
 
 class applyCreate(applyBase):
     role: str
+    
 
 
 class apply(applyBase):
     id: int
     owner_id: int
-
+    
     class Config:
         orm_mode = True
 

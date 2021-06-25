@@ -1,5 +1,5 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, query
 
 from .database import Base
 
@@ -33,6 +33,7 @@ class apply(Base):
     name = Column(String, index=True)
     role = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("job.id"))
+    user_id = Column
 
     owner = relationship("User", back_populates="jobapplication")
 

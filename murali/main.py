@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, query
 from sqlalchemy.sql.elements import RollbackToSavepointClause
 
 
@@ -49,9 +49,14 @@ def read_job(job_id: int, db: Session = Depends(get_db)):
 
 @app.post("/job/{job_id}/apply/", response_model=schemas.apply)
 def apply(
-    job_id: int, apply: schemas.applyCreate, db: Session = Depends(get_db)
+    job_id: int, user_id: int, apply: schemas.applyCreate, db: Session = Depends(get_db)
 ):
-    return crud.apply(db=db, apply=apply, job_id=job_id)
+     db_job = crud.get_job(db, job_id=job_id)
+     db_user = crud.get_user(db, user_id=user_id)
+     if db_job is None:
+        raise HTTPException(status_code=404, detail="job not found")
+     
+     return crud.apply(db=db, apply=apply, job_id=job_id, user_id=user_id )
 
 
 
